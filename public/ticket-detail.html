@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Details - DeskHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .card { background: white; padding: 2rem; border-radius: 0.5rem; border: 1px solid var(--border-color); margin-bottom: 2rem; }
+        h3 { font-size: 1rem; color: var(--secondary-color); text-transform: uppercase; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><strong>DeskHub</strong></div>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="tickets.html">Tickets</a>
+            <span id="user-name"></span>
+            <a href="#" id="logout-btn">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <a href="tickets.html" style="display: inline-block; margin-bottom: 1rem; color: var(--primary-color); text-decoration: none;">← Back to Tickets</a>
+        
+        <div id="ticket-detail-container">
+            <!-- Ticket details will be rendered here -->
+        </div>
+
+        <section style="margin-top: 3rem;">
+            <h2>Comments</h2>
+            <div id="comments-container" style="margin-top: 1.5rem;">
+                <!-- Comments will be rendered here -->
+            </div>
+
+            <div class="card" style="margin-top: 2rem;">
+                <h3>Add a Comment</h3>
+                <form id="comment-form">
+                    <div class="form-group">
+                        <textarea id="comment-text" class="form-control" rows="4" placeholder="Write your internal note or response here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: auto;">Post Comment</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initTicketDetail } from '/src/modules/ticketDetail.js';
+        document.addEventListener('DOMContentLoaded', initTicketDetail);
+    </script>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Priya Sharma",
+      "email": "priya@deskhub.in",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Arjun Singh",
+      "email": "arjun@deskhub.in",
+      "role": "agent"
+    },
+    {
+      "id": 3,
+      "name": "Neha Gupta",
+      "email": "neha@deskhub.in",
+      "role": "agent"
+    },
+    {
+      "id": 4,
+      "name": "Rahul Verma",
+      "email": "rahul@deskhub.in",
+      "role": "agent"
+    },
+    {
+      "id": 5,
+      "name": "Anjali Rao",
+      "email": "anjali@deskhub.in",
+      "role": "agent"
+    }
+  ],
+  "tickets": [
+    {
+      "id": 1,
+      "title": "Login issue on mobile",
+      "description": "User cannot login via the Android app.",
+      "status": "open",
+      "priority": "high",
+      "category": "technical",
+      "customerName": "Amit Kumar",
+      "customerEmail": "amit@example.com",
+      "assigneeId": 2,
+      "createdAt": "2026-05-01T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "title": "Billing inquiry",
+      "description": "Customer wants to upgrade their plan.",
+      "status": "in-progress",
+      "priority": "medium",
+      "category": "billing",
+      "customerName": "Suresh Raina",
+      "customerEmail": "suresh@example.com",
+      "assigneeId": 3,
+      "createdAt": "2026-05-02T11:30:00Z"
+    },
+    {
+      "title": "PF deduction Enquiry",
+      "description": "last year pf not deducted",
+      "priority": "high",
+      "category": "billing",
+      "customerName": "sonam singh",
+      "customerEmail": "sonam4080tomar@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-02T09:59:35.212Z",
+      "id": 3
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "ticketId": 1,
+      "userId": 2,
+      "text": "Investigating the logs now.",
+      "createdAt": "2026-05-01T10:15:00Z"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets - DeskHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><strong>DeskHub</strong></div>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="tickets.html" class="active">Tickets</a>
+            <span id="user-name"></span>
+            <a href="#" id="logout-btn">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1>Support Tickets</h1>
+            <button class="btn btn-primary" style="width: auto;" id="new-ticket-btn">+ New Ticket</button>
+        </div>
+
+        <div class="filters-bar">
+            <input type="text" id="search-input" placeholder="Search tickets...">
+            <select id="status-filter">
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="in-progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+            </select>
+            <select id="priority-filter">
+                <option value="">All Priorities</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+            </select>
+            <select id="sort-select">
+                <option value="createdAt">Sort by Date</option>
+                <option value="priority">Sort by Priority</option>
+                <option value="status">Sort by Status</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Customer</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tickets-tbody">
+                    <!-- Tickets will be rendered here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="pagination" style="margin-top: 1.5rem; display: flex; justify-content: center; align-items: center; gap: 1rem;">
+            <!-- Pagination will be rendered here -->
+        </div>
+    </main>
+
+    <!-- New Ticket Modal -->
+    <div id="ticket-modal" class="modal">
+        <div class="modal-content">
+            <h2>Create New Ticket</h2>
+            <form id="ticket-form" style="margin-top: 1.5rem;">
+                <div class="form-group">
+                    <label for="ticket-title">Title</label>
+                    <input type="text" id="ticket-title" class="form-control" required minlength="5" maxlength="100">
+                    <div class="error-message" id="title-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="ticket-description">Description</label>
+                    <textarea id="ticket-description" class="form-control" rows="3" required minlength="10"></textarea>
+                    <div class="error-message" id="description-error"></div>
+                </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label for="ticket-priority">Priority</label>
+                        <select id="ticket-priority" class="form-control" required>
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="ticket-category">Category</label>
+                        <select id="ticket-category" class="form-control" required>
+                            <option value="technical">Technical</option>
+                            <option value="billing">Billing</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="customer-name">Customer Name</label>
+                    <input type="text" id="customer-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">Customer Email</label>
+                    <input type="email" id="customer-email" class="form-control" required>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary">Create Ticket</button>
+                    <button type="button" class="btn" id="close-modal" style="background: var(--secondary-color); color: white;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

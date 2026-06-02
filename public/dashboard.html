@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DeskHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><strong>DeskHub</strong></div>
+        <nav>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="tickets.html">Tickets</a>
+            <span id="user-name"></span>
+            <a href="#" id="logout-btn">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Welcome back!</h1>
+        <p style="margin-bottom: 2rem; color: var(--secondary-color);">Here's what's happening with your tickets today.</p>
+
+        <div class="stats-grid">
+            <!-- Stats will be rendered here -->
+        </div>
+
+        <section>
+            <h2>Recent Activity</h2>
+            <div class="table-container" style="margin-top: 1rem; padding: 2rem; text-align: center; color: var(--secondary-color);">
+                Recent tickets and activity will appear here.
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
