@@ -2,10 +2,10 @@
   "name": "deskhub",
   "version": "1.0.0",
   "description": "DeskHub - Support Ticket Dashboard",
-  "main": "src/main.js",
+  "main": "docs/src/main.js",
   "scripts": {
     "api": "json-server --watch db.json --port 3001",
-    "ui": "live-server . --port=8080 --open=public/index.html",
+    "ui": "live-server docs/index.html --port=8080 --open=docs/index.html",
     "dev": "concurrently \"npm run api\" \"npm run ui\""
   },
   "dependencies": {

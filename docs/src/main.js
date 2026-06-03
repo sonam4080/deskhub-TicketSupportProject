@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
     const page = path.split('/').pop();
 
-    if (page === 'index.html' || page === '' || path.endsWith('/public/')) {
+    if (page === 'index.html' || page === '') {
         initLogin();
     } else if (page === 'tickets.html') {
         initTicketsList();

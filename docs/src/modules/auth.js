@@ -32,7 +32,7 @@ export function checkAuth() {
     const path = window.location.pathname;
     const currentPage = path.split('/').pop();
     
-    const isPublic = publicPages.includes(currentPage) || path.endsWith('/public/');
+    const isPublic = publicPages.includes(currentPage);
     const isAuthenticated = authApi.isAuthenticated();
 
     if (!isAuthenticated && !isPublic) {

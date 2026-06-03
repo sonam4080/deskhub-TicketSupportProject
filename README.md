@@ -33,7 +33,10 @@ A vanilla JavaScript, ES-module based support ticketing application built for th
 - **Password**: `demo123`
 
 ## Project Structure
-- `public/`: Static assets and HTML files.
-- `src/api/`: API client and service wrappers.
-- `src/modules/`: UI logic and module-specific code.
-- `src/utils/`: Helper functions and shared utilities.
+- `docs/`: Static assets and HTML files for GitHub Pages.
+- `docs/src/api/`: API client and service wrappers.
+- `docs/src/modules/`: UI logic and module-specific code.
+- `docs/src/utils/`: Helper functions and shared utilities.
+
+## GitHub Pages
+Set GitHub Pages source to `main` branch and `docs/` folder.
