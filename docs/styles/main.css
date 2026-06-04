@@ -279,6 +279,9 @@ th {
     border-radius: 0.5rem;
     width: 100%;
     max-width: 500px;
+    /* Keep modal content within viewport and allow internal scrolling */
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
 }
 
 /* Toast */

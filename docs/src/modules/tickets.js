@@ -59,14 +59,33 @@ export async function initTicketsList() {
 
     // Modal logic
     newTicketBtn?.addEventListener('click', () => {
+        // Reset form and clear previous validation errors so modal opens fresh
+        ticketForm.reset();
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.textContent = '';
+            el.classList.remove('show');
+        });
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.classList.remove('error');
+        });
+
         modal.style.display = 'flex';
         document.body.classList.add('modal-open');
+        // Ensure modal content is scrolled to top when opening
+        modal.querySelector('.modal-content')?.scrollTo?.({ top: 0 });
     });
 
     closeModalBtn?.addEventListener('click', () => {
         modal.style.display = 'none';
         document.body.classList.remove('modal-open');
         ticketForm.reset();
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.textContent = '';
+            el.classList.remove('show');
+        });
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.classList.remove('error');
+        });
     });
 
     window.addEventListener('click', (e) => {
@@ -74,6 +93,13 @@ export async function initTicketsList() {
             modal.style.display = 'none';
             document.body.classList.remove('modal-open');
             ticketForm.reset();
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('show');
+            });
+            document.querySelectorAll('.form-control').forEach(el => {
+                el.classList.remove('error');
+            });
         }
     });
 
