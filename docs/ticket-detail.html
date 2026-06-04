@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Details - DeskHub</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="./styles/main.css">
     <style>
         .card { background: white; padding: 2rem; border-radius: 0.5rem; border: 1px solid var(--border-color); margin-bottom: 2rem; }
         h3 { font-size: 1rem; color: var(--secondary-color); text-transform: uppercase; margin-bottom: 0.5rem; }
@@ -40,7 +40,9 @@
                     <div class="form-group">
                         <textarea id="comment-text" class="form-control" rows="4" placeholder="Write your internal note or response here..." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: auto;">Post Comment</button>
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="width: auto;">Post Comment</button>
+                    </div>
                 </form>
             </div>
         </section>

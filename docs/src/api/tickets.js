@@ -2,7 +2,7 @@ import { client } from './client.js';
 
 export const ticketsApi = {
     listTickets: (params = '') => client.get(`/tickets${params}`),
-    getTicket: (id) => client.get(`/tickets/${id}?_expand=user`),
+    getTicket: (id) => client.get(`/tickets/${id}`),
     createTicket: (ticket) => client.post('/tickets', { ...ticket, createdAt: new Date().toISOString() }),
     updateTicket: (id, updates) => client.patch(`/tickets/${id}`, updates),
     deleteTicket: (id) => client.del(`/tickets/${id}`),

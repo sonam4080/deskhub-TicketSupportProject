@@ -53,13 +53,15 @@ body {
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.875rem;
 }
 
 .form-control {
@@ -68,6 +70,18 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 0.375rem;
     font-size: 1rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
 }
 
 .btn {
@@ -90,11 +104,62 @@ body {
     background-color: #1d4ed8;
 }
 
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.btn-danger {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+.action-cell {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+th:last-child {
+    text-align: center;
+}
+
 .error-message {
     color: var(--error-color);
     font-size: 0.875rem;
     margin-top: 0.5rem;
     display: none;
+    font-weight: 500;
+}
+
+.error-message.show {
+    display: block;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-control.error {
+    border-color: var(--error-color);
+    background-color: rgba(239, 68, 68, 0.05);
 }
 
 /* Dashboard & Common UI */
@@ -231,4 +296,50 @@ th {
     border-radius: 0.375rem;
     margin-top: 0.5rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* Modal Blur Effect */
+.modal.active {
+    display: flex;
+    z-index: 999;
+}
+
+.modal.active ~ * {
+    filter: blur(0);
+}
+
+/* Blur background when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+body.modal-open main {
+    filter: blur(4px);
+}
+
+body.modal-open header {
+    filter: blur(4px);
+}
+
+/* Delete Modal Styling */
+.delete-modal-content {
+    min-width: 350px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.delete-modal-content h2 {
+    color: var(--error-color);
+    font-size: 1.25rem;
 }

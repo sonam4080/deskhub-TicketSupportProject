@@ -33,18 +33,6 @@
   ],
   "tickets": [
     {
-      "id": 1,
-      "title": "Login issue on mobile",
-      "description": "User cannot login via the Android app.",
-      "status": "open",
-      "priority": "high",
-      "category": "technical",
-      "customerName": "Amit Kumar",
-      "customerEmail": "amit@example.com",
-      "assigneeId": 2,
-      "createdAt": "2026-05-01T10:00:00Z"
-    },
-    {
       "id": 2,
       "title": "Billing inquiry",
       "description": "Customer wants to upgrade their plan.",
@@ -57,25 +45,77 @@
       "createdAt": "2026-05-02T11:30:00Z"
     },
     {
-      "title": "PF deduction Enquiry",
-      "description": "last year pf not deducted",
-      "priority": "high",
-      "category": "billing",
-      "customerName": "sonam singh",
-      "customerEmail": "sonam4080tomar@gmail.com",
+      "title": "new raise",
+      "description": "correct this atleast once",
+      "priority": "medium",
+      "category": "technical",
+      "customerName": "sgghj",
+      "customerEmail": "sonam3890rajput@gmail.com",
       "status": "open",
       "assigneeId": null,
-      "createdAt": "2026-06-02T09:59:35.212Z",
-      "id": 3
+      "createdAt": "2026-06-04T05:56:11.763Z",
+      "id": 4
+    },
+    {
+      "title": "PF deduction Enquiry",
+      "description": "issue in PF diductions",
+      "priority": "medium",
+      "category": "technical",
+      "customerName": "sonam singh",
+      "customerEmail": "s23@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-04T15:23:49.501Z",
+      "id": 5
+    },
+    {
+      "title": "PF deduction Enquiry checking-Ab",
+      "description": "issue in PF diductions-123",
+      "priority": "medium",
+      "category": "technical",
+      "customerName": "s si",
+      "customerEmail": "rats@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-04T15:24:29.967Z",
+      "id": 6
     }
   ],
   "comments": [
     {
-      "id": 1,
-      "ticketId": 1,
-      "userId": 2,
-      "text": "Investigating the logs now.",
-      "createdAt": "2026-05-01T10:15:00Z"
+      "ticketId": 6,
+      "userId": 1,
+      "text": "This should be on high priority ",
+      "createdAt": "2026-06-04T15:37:56.843Z",
+      "id": 1
+    },
+    {
+      "ticketId": 6,
+      "userId": 1,
+      "text": "This should be on high priority ",
+      "createdAt": "2026-06-04T15:37:56.845Z",
+      "id": 2
+    },
+    {
+      "ticketId": 6,
+      "userId": 1,
+      "text": "alright it should be taken care by shashi\n",
+      "createdAt": "2026-06-04T15:38:25.372Z",
+      "id": 3
+    },
+    {
+      "ticketId": 6,
+      "userId": 1,
+      "text": "alright it should be taken care by shashi\n",
+      "createdAt": "2026-06-04T15:38:25.372Z",
+      "id": 4
+    },
+    {
+      "ticketId": 6,
+      "userId": 1,
+      "text": "alright\n",
+      "createdAt": "2026-06-04T15:46:21.100Z",
+      "id": 5
     }
   ]
 }
