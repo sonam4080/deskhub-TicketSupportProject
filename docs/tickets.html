@@ -45,6 +45,7 @@
                 <option value="priority">Sort by Priority</option>
                 <option value="status">Sort by Status</option>
             </select>
+            <button id="clear-filters-btn" class="btn" title="Clear filters" style="width: auto;" disabled>Clear Filters</button>
         </div>
 
         <div class="table-container">
@@ -92,20 +93,24 @@
                     <div>
                         <label for="ticket-priority">Priority</label>
                         <select id="ticket-priority" class="form-control">
+                            <option value="">Choose Priority</option>
                             <option value="low">Low</option>
-                            <option value="medium" selected>Medium</option>
+                            <option value="medium">Medium</option>
                             <option value="high">High</option>
                             <option value="urgent">Urgent</option>
                         </select>
+                        <div class="error-message" id="priority-error"></div>
                     </div>
                     <div>
                         <label for="ticket-category">Category</label>
                         <select id="ticket-category" class="form-control">
+                            <option value="">Choose Category</option>
                             <option value="technical">Technical</option>
                             <option value="billing">Billing</option>
                             <option value="feature">Feature Request</option>
                             <option value="other">Other</option>
                         </select>
+                        <div class="error-message" id="category-error"></div>
                     </div>
                 </div>
                 <div class="form-group">

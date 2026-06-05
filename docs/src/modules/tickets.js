@@ -12,6 +12,7 @@ export async function initTicketsList() {
     const statusFilter = document.getElementById('status-filter');
     const priorityFilter = document.getElementById('priority-filter');
     const sortSelect = document.getElementById('sort-select');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
     const newTicketBtn = document.getElementById('new-ticket-btn');
     const modal = document.getElementById('ticket-modal');
     const closeModalBtn = document.getElementById('close-modal');
@@ -59,8 +60,41 @@ export async function initTicketsList() {
         el?.addEventListener('change', () => {
             currentPage = 1;
             refresh();
+            updateClearButton();
         });
     });
+
+    // Clear filters button
+    clearFiltersBtn?.addEventListener('click', () => {
+        // Reset controls to defaults
+        if (searchInput) searchInput.value = '';
+        if (statusFilter) statusFilter.value = '';
+        if (priorityFilter) priorityFilter.value = '';
+        if (sortSelect) sortSelect.value = 'createdAt';
+        currentPage = 1;
+        refresh();
+        updateClearButton();
+    });
+
+    // Enable/disable clear button based on filters/search state
+    function updateClearButton() {
+        if (!clearFiltersBtn) return;
+        const hasSearch = !!(searchInput && searchInput.value && searchInput.value.trim() !== '');
+        const hasStatus = !!(statusFilter && statusFilter.value);
+        const hasPriority = !!(priorityFilter && priorityFilter.value);
+        const hasSort = !!(sortSelect && sortSelect.value && sortSelect.value !== 'createdAt');
+        clearFiltersBtn.disabled = !(hasSearch || hasStatus || hasPriority || hasSort);
+    }
+
+    // Wire search input to update clear button state
+    searchInput?.addEventListener('input', debounce(() => {
+        currentPage = 1;
+        refresh();
+        updateClearButton();
+    }, 300));
+
+    // Initialize clear button state
+    updateClearButton();
 
     // Modal logic
     newTicketBtn?.addEventListener('click', () => {
@@ -148,6 +182,12 @@ export async function initTicketsList() {
             ],
             customerName: [
                 { type: 'required', message: 'Customer name is required' }
+            ],
+            priority: [
+                { type: 'required', message: 'Please select a priority' }
+            ],
+            category: [
+                { type: 'required', message: 'Please select a category' }
             ]
         };
 
@@ -161,7 +201,9 @@ export async function initTicketsList() {
                 title: { message: 'title-error', input: 'ticket-title' },
                 description: { message: 'description-error', input: 'ticket-description' },
                 customerName: { message: 'customer-name-error', input: 'customer-name' },
-                customerEmail: { message: 'customer-email-error', input: 'customer-email' }
+                customerEmail: { message: 'customer-email-error', input: 'customer-email' },
+                priority: { message: 'priority-error', input: 'ticket-priority' },
+                category: { message: 'category-error', input: 'ticket-category' }
             };
 
             Object.entries(errors).forEach(([field, message]) => {
@@ -198,11 +240,20 @@ export async function initTicketsList() {
         }
     });
 
-    // Remove error styling when user starts typing
-    ['ticket-title', 'ticket-description', 'customer-name', 'customer-email'].forEach(fieldId => {
-        document.getElementById(fieldId)?.addEventListener('input', function() {
-            this.classList.remove('error');
-        });
+    // Remove error styling when user starts typing or changes selection
+    ['ticket-title', 'ticket-description', 'customer-name', 'customer-email', 'ticket-priority', 'ticket-category'].forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) {
+            if (element.tagName === 'SELECT') {
+                element.addEventListener('change', function() {
+                    this.classList.remove('error');
+                });
+            } else {
+                element.addEventListener('input', function() {
+                    this.classList.remove('error');
+                });
+            }
+        }
     });
 
     // Delete confirmation modal handlers

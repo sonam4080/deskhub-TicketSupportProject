@@ -117,20 +117,6 @@
       "statusRank": 3
     },
     {
-      "title": "system change -1",
-      "description": "System is not opening",
-      "priority": "medium",
-      "category": "technical",
-      "customerName": "amit",
-      "customerEmail": "amit@gmail.com",
-      "status": "open",
-      "assigneeId": null,
-      "createdAt": "2026-06-05T04:17:39.006Z",
-      "id": 9,
-      "priorityRank": 2,
-      "statusRank": 3
-    },
-    {
       "title": "sort by status",
       "description": "based on status ticket sort",
       "priority": "low",
@@ -145,7 +131,7 @@
       "statusRank": 3
     },
     {
-      "title": "sort by priority",
+      "title": "sort by priority by first",
       "description": "based on priority ticket sort",
       "priority": "urgent",
       "category": "technical",
@@ -159,16 +145,16 @@
       "statusRank": 3
     },
     {
-      "title": "Resolved Sorting working",
-      "description": "now working everything",
-      "priority": "medium",
-      "category": "technical",
-      "customerName": "JJ i",
-      "customerEmail": "JJ@gmail.com",
+      "title": "new test-after edit -2",
+      "description": "checking new implementation",
+      "priority": "urgent",
+      "category": "billing",
+      "customerName": "sh Singh",
+      "customerEmail": "dh@gmail.com",
       "status": "open",
       "assigneeId": null,
-      "createdAt": "2026-06-05T04:34:14.401Z",
-      "priorityRank": 2,
+      "createdAt": "2026-06-05T18:02:53.073Z",
+      "priorityRank": 4,
       "statusRank": 3,
       "id": 14
     }
@@ -238,17 +224,17 @@
       "id": 9
     },
     {
-      "ticketId": 9,
+      "ticketId": 13,
       "userId": 1,
-      "text": "yet not in progress",
-      "createdAt": "2026-06-05T04:18:08.537Z",
+      "text": "status in progress",
+      "createdAt": "2026-06-05T05:36:36.374Z",
       "id": 10
     },
     {
       "ticketId": 14,
       "userId": 1,
-      "text": "Hi",
-      "createdAt": "2026-06-05T04:35:10.375Z",
+      "text": "what is status\n",
+      "createdAt": "2026-06-05T18:03:17.966Z",
       "id": 11
     }
   ]

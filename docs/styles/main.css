@@ -260,6 +260,20 @@ th {
     border-radius: 0.375rem;
 }
 
+/* Clear Filters button styling */
+.filters-bar #clear-filters-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.filters-bar #clear-filters-btn:hover {
+    background: #f1f5f9;
+}
+
 /* Modal */
 .modal {
     display: none;
