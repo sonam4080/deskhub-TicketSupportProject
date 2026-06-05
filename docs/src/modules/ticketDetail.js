@@ -6,6 +6,7 @@ import { validateForm } from './form.js';
 export async function initTicketDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const ticketId = urlParams.get('id');
+    const showEditButton = urlParams.get('source') === 'title';
 
     if (!ticketId) {
         window.location.href = 'tickets.html';
@@ -19,6 +20,10 @@ export async function initTicketDetail() {
         ]);
 
         window.currentTicket = ticketRes.data; // Store ticket data globally for edit mode
+        const container = document.getElementById('ticket-detail-container');
+        if (container) {
+            container.dataset.allowEdit = showEditButton ? 'true' : 'false';
+        }
         renderTicket(ticketRes.data);
         renderComments(commentsRes.data);
         setupDetailActions(ticketId);
@@ -32,6 +37,7 @@ function renderTicket(ticket) {
     if (!container) return;
 
     const isEditMode = container.dataset.editMode === 'true';
+    const allowEdit = container.dataset.allowEdit === 'true';
 
     if (isEditMode) {
         container.innerHTML = `
@@ -113,7 +119,7 @@ function renderTicket(ticket) {
                         <span class="badge badge-${ticket.status.replace(' ', '-')}">${ticket.status}</span>
                     </div>
                 </div>
-                <button class="btn btn-primary" id="edit-ticket-btn" style="width: auto; margin-top: 1rem; margin-bottom: 1rem;">Edit Ticket</button>
+                ${allowEdit ? `<button class="btn btn-primary" id="edit-ticket-btn" style="width: auto; margin-top: 1rem; margin-bottom: 1rem;">Edit Ticket</button>` : ''}
                 <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border-color);">
                 <div style="margin-bottom: 2rem;">
                     <h3>Description</h3>
@@ -159,6 +165,8 @@ function renderComments(comments) {
 
 function setupDetailActions(ticketId) {
     const container = document.getElementById('ticket-detail-container');
+    if (!container) return;
+
     const editBtn = document.getElementById('edit-ticket-btn');
     const cancelEditBtn = document.getElementById('cancel-edit-btn');
     const cancelEditTopBtn = document.getElementById('cancel-edit');
@@ -184,115 +192,118 @@ function setupDetailActions(ticketId) {
     });
 
     // Handle form submission
-    editForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Clear previous errors and error styling
-        document.querySelectorAll('[id^="edit-"]').filter(el => el.id.endsWith('-error')).forEach(el => {
-            el.textContent = '';
-            el.classList.remove('show');
-        });
-        document.querySelectorAll('#edit-ticket-form .form-control').forEach(el => {
-            el.classList.remove('error');
-        });
-        
-        const formData = {
-            title: document.getElementById('edit-title').value,
-            description: document.getElementById('edit-description').value,
-            customerName: document.getElementById('edit-customer-name').value,
-            customerEmail: document.getElementById('edit-customer-email').value
-        };
+    if (editForm) {
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        // Validation schema
-        const validationSchema = {
-            title: [
-                { type: 'required', message: 'Title is required' },
-                { type: 'minLength', param: 5, message: 'Title must be at least 5 characters' },
-                { type: 'maxLength', param: 100, message: 'Title cannot exceed 100 characters' }
-            ],
-            description: [
-                { type: 'required', message: 'Description is required' },
-                { type: 'minLength', param: 10, message: 'Description must be at least 10 characters' }
-            ],
-            customerEmail: [
-                { type: 'required', message: 'Customer email is required' },
-                { type: 'email', message: 'Please enter a valid email address' }
-            ],
-            customerName: [
-                { type: 'required', message: 'Customer name is required' }
-            ]
-        };
+            // Clear previous errors and error styling inside the edit form only
+            editForm.querySelectorAll('[id$="-error"]').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('show');
+            });
+            editForm.querySelectorAll('.form-control').forEach(el => {
+                el.classList.remove('error');
+            });
 
-        // Validate form
-        const errors = validateForm(formData, validationSchema);
-        
-        // Display errors
-        if (Object.keys(errors).length > 0) {
-            // Map error field names to HTML elements
-            const errorFieldMap = {
-                title: { message: 'edit-title-error', input: 'edit-title' },
-                description: { message: 'edit-description-error', input: 'edit-description' },
-                customerName: { message: 'edit-customer-name-error', input: 'edit-customer-name' },
-                customerEmail: { message: 'edit-customer-email-error', input: 'edit-customer-email' }
+            const formData = {
+                title: document.getElementById('edit-title').value,
+                description: document.getElementById('edit-description').value,
+                customerName: document.getElementById('edit-customer-name').value,
+                customerEmail: document.getElementById('edit-customer-email').value
             };
 
-            Object.entries(errors).forEach(([field, message]) => {
-                const mapping = errorFieldMap[field];
-                if (mapping) {
-                    // Show error message
-                    const errorEl = document.getElementById(mapping.message);
-                    if (errorEl) {
-                        errorEl.textContent = message;
-                        errorEl.classList.add('show');
+            // Validation schema
+            const validationSchema = {
+                title: [
+                    { type: 'required', message: 'Title is required' },
+                    { type: 'minLength', param: 5, message: 'Title must be at least 5 characters' },
+                    { type: 'maxLength', param: 100, message: 'Title cannot exceed 100 characters' }
+                ],
+                description: [
+                    { type: 'required', message: 'Description is required' },
+                    { type: 'minLength', param: 10, message: 'Description must be at least 10 characters' }
+                ],
+                customerEmail: [
+                    { type: 'required', message: 'Customer email is required' },
+                    { type: 'email', message: 'Please enter a valid email address' }
+                ],
+                customerName: [
+                    { type: 'required', message: 'Customer name is required' }
+                ]
+            };
+
+            // Validate form
+            const errors = validateForm(formData, validationSchema);
+
+            // Display errors
+            if (Object.keys(errors).length > 0) {
+                // Map error field names to HTML elements
+                const errorFieldMap = {
+                    title: { message: 'edit-title-error', input: 'edit-title' },
+                    description: { message: 'edit-description-error', input: 'edit-description' },
+                    customerName: { message: 'edit-customer-name-error', input: 'edit-customer-name' },
+                    customerEmail: { message: 'edit-customer-email-error', input: 'edit-customer-email' }
+                };
+
+                Object.entries(errors).forEach(([field, message]) => {
+                    const mapping = errorFieldMap[field];
+                    if (mapping) {
+                        // Show error message
+                        const errorEl = document.getElementById(mapping.message);
+                        if (errorEl) {
+                            errorEl.textContent = message;
+                            errorEl.classList.add('show');
+                        }
+
+                        // Add error styling to input
+                        const inputEl = document.getElementById(mapping.input);
+                        if (inputEl) {
+                            inputEl.classList.add('error');
+                        }
                     }
-                    
-                    // Add error styling to input
-                    const inputEl = document.getElementById(mapping.input);
-                    if (inputEl) {
-                        inputEl.classList.add('error');
-                    }
-                }
-            });
-            
-            ui.showToast('Please fix the errors in the form');
-            return;
-        }
+                });
 
-        const updates = {
-            title: formData.title,
-            description: formData.description,
-            priority: document.getElementById('edit-priority').value,
-            category: document.getElementById('edit-category').value,
-            status: document.getElementById('edit-status').value,
-            customerName: formData.customerName,
-            customerEmail: formData.customerEmail
-        };
+                ui.showToast('Please fix the errors in the form');
+                return;
+            }
 
-        try {
-            await ticketsApi.updateTicket(ticketId, updates);
-            ui.showToast('Ticket updated successfully!');
-            window.currentTicket = { ...window.currentTicket, ...updates };
-            container.dataset.editMode = 'false';
-            renderTicket(window.currentTicket);
-            setupDetailActions(ticketId);
-        } catch (error) {
-            ui.showToast('Failed to update ticket');
-        }
-    });
+            const updates = {
+                title: formData.title,
+                description: formData.description,
+                priority: document.getElementById('edit-priority').value,
+                category: document.getElementById('edit-category').value,
+                status: document.getElementById('edit-status').value,
+                customerName: formData.customerName,
+                customerEmail: formData.customerEmail
+            };
 
-    // Remove error styling when user starts typing
-    ['edit-title', 'edit-description', 'edit-customer-name', 'edit-customer-email'].forEach(fieldId => {
-        document.getElementById(fieldId)?.addEventListener('input', function() {
-            this.classList.remove('error');
+            try {
+                await ticketsApi.updateTicket(ticketId, updates);
+                ui.showToast('Ticket updated successfully!');
+                window.currentTicket = { ...window.currentTicket, ...updates };
+                container.dataset.editMode = 'false';
+                renderTicket(window.currentTicket);
+                setupDetailActions(ticketId);
+            } catch (error) {
+                ui.showToast('Failed to update ticket');
+            }
         });
-    });
+
+        // Remove error styling when user starts typing
+        ['edit-title', 'edit-description', 'edit-customer-name', 'edit-customer-email'].forEach(fieldId => {
+            document.getElementById(fieldId)?.addEventListener('input', function () {
+                this.classList.remove('error');
+            });
+        });
+
+    }
 
     const commentForm = document.getElementById('comment-form');
     if (commentForm) {
         // Clone to remove all old event listeners
         const newCommentForm = commentForm.cloneNode(true);
         commentForm.parentNode.replaceChild(newCommentForm, commentForm);
-        
+
         newCommentForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const text = document.getElementById('comment-text').value;

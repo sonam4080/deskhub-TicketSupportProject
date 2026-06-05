@@ -42,7 +42,9 @@
       "customerName": "Suresh Raina",
       "customerEmail": "suresh@example.com",
       "assigneeId": 3,
-      "createdAt": "2026-05-02T11:30:00Z"
+      "createdAt": "2026-05-02T11:30:00Z",
+      "priorityRank": 2,
+      "statusRank": 2
     },
     {
       "title": "new raise",
@@ -54,7 +56,9 @@
       "status": "open",
       "assigneeId": null,
       "createdAt": "2026-06-04T05:56:11.763Z",
-      "id": 4
+      "id": 4,
+      "priorityRank": 2,
+      "statusRank": 3
     },
     {
       "title": "PF deduction Enquiry",
@@ -66,7 +70,9 @@
       "status": "open",
       "assigneeId": null,
       "createdAt": "2026-06-04T15:23:49.501Z",
-      "id": 5
+      "id": 5,
+      "priorityRank": 2,
+      "statusRank": 3
     },
     {
       "title": "PF deduction Enquiry checking-Ab",
@@ -78,7 +84,93 @@
       "status": "open",
       "assigneeId": null,
       "createdAt": "2026-06-04T15:24:29.967Z",
-      "id": 6
+      "id": 6,
+      "priorityRank": 2,
+      "statusRank": 3
+    },
+    {
+      "title": "PF deduction previous  year-1",
+      "description": "in progress",
+      "priority": "medium",
+      "category": "technical",
+      "customerName": "S chanda",
+      "customerEmail": "so@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-05T03:57:05.310Z",
+      "id": 7,
+      "priorityRank": 2,
+      "statusRank": 3
+    },
+    {
+      "title": "New Ticket -2",
+      "description": "creating new ticket",
+      "priority": "high",
+      "category": "technical",
+      "customerName": "D si",
+      "customerEmail": "sut@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-05T04:03:46.471Z",
+      "id": 8,
+      "priorityRank": 3,
+      "statusRank": 3
+    },
+    {
+      "title": "system change -1",
+      "description": "System is not opening",
+      "priority": "medium",
+      "category": "technical",
+      "customerName": "amit",
+      "customerEmail": "amit@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-05T04:17:39.006Z",
+      "id": 9,
+      "priorityRank": 2,
+      "statusRank": 3
+    },
+    {
+      "title": "sort by status",
+      "description": "based on status ticket sort",
+      "priority": "low",
+      "category": "technical",
+      "customerName": "K i",
+      "customerEmail": "K@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-05T04:22:30.306Z",
+      "id": 12,
+      "priorityRank": 1,
+      "statusRank": 3
+    },
+    {
+      "title": "sort by priority",
+      "description": "based on priority ticket sort",
+      "priority": "urgent",
+      "category": "technical",
+      "customerName": "P i",
+      "customerEmail": "P@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-05T04:23:20.720Z",
+      "id": 13,
+      "priorityRank": 4,
+      "statusRank": 3
+    },
+    {
+      "title": "Resolved Sorting working",
+      "description": "now working everything",
+      "priority": "medium",
+      "category": "technical",
+      "customerName": "JJ i",
+      "customerEmail": "JJ@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-05T04:34:14.401Z",
+      "priorityRank": 2,
+      "statusRank": 3,
+      "id": 14
     }
   ],
   "comments": [
@@ -116,6 +208,48 @@
       "text": "alright\n",
       "createdAt": "2026-06-04T15:46:21.100Z",
       "id": 5
+    },
+    {
+      "ticketId": 2,
+      "userId": 1,
+      "text": "Hi what is a progress.",
+      "createdAt": "2026-06-05T03:47:09.353Z",
+      "id": 6
+    },
+    {
+      "ticketId": 8,
+      "userId": 1,
+      "text": "What is progress",
+      "createdAt": "2026-06-05T04:04:03.455Z",
+      "id": 7
+    },
+    {
+      "ticketId": 8,
+      "userId": 1,
+      "text": "any update",
+      "createdAt": "2026-06-05T04:05:18.662Z",
+      "id": 8
+    },
+    {
+      "ticketId": 8,
+      "userId": 1,
+      "text": "Hi ",
+      "createdAt": "2026-06-05T04:12:11.727Z",
+      "id": 9
+    },
+    {
+      "ticketId": 9,
+      "userId": 1,
+      "text": "yet not in progress",
+      "createdAt": "2026-06-05T04:18:08.537Z",
+      "id": 10
+    },
+    {
+      "ticketId": 14,
+      "userId": 1,
+      "text": "Hi",
+      "createdAt": "2026-06-05T04:35:10.375Z",
+      "id": 11
     }
   ]
 }

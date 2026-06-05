@@ -5,7 +5,7 @@ import { ui } from './ui.js';
 import { validateForm } from './form.js';
 
 let currentPage = 1;
-const limit = 10;
+const limit = 5;
 
 export async function initTicketsList() {
     const searchInput = document.getElementById('search-input');
@@ -31,7 +31,12 @@ export async function initTicketsList() {
         const priority = priorityFilter?.value || '';
         const sort = sortSelect?.value || 'createdAt';
         
-        let params = `?_page=${currentPage}&_limit=${limit}&_sort=${sort}&_order=desc`;
+        const sortField = sort === 'priority'
+            ? 'priorityRank,createdAt'
+            : sort === 'status'
+                ? 'statusRank,createdAt'
+                : 'createdAt';
+        let params = `?_page=${currentPage}&_limit=${limit}&_sort=${sortField}&_order=desc`;
         if (query) params += `&q=${query}`;
         if (status) params += `&status=${status}`;
         if (priority) params += `&priority=${priority}`;
@@ -264,7 +269,7 @@ function renderTable(tickets) {
     tbody.innerHTML = tickets.map(t => `
         <tr>
             <td>#${t.id}</td>
-            <td><a href="ticket-detail.html?id=${t.id}">${t.title}</a></td>
+            <td><a href="ticket-detail.html?id=${t.id}&source=title">${t.title}</a></td>
             <td>${t.customerName}</td>
             <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
             <td><span class="badge badge-${t.status.replace(' ', '-')}">${t.status}</span></td>
