@@ -31,5 +31,6 @@ export const ticketsApi = {
     updateTicket: (id, updates) => client.patch(`/tickets/${id}`, addRankFields(updates)),
     deleteTicket: (id) => client.del(`/tickets/${id}`),
     listComments: (ticketId) => client.get(`/comments?ticketId=${ticketId}&_expand=user`),
+    listAllComments: () => client.get('/comments?_expand=user'),
     addComment: (comment) => client.post('/comments', { ...comment, createdAt: new Date().toISOString() })
 };

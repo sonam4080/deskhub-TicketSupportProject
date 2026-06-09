@@ -5,7 +5,7 @@
   "main": "docs/src/main.js",
   "scripts": {
     "api": "json-server --watch db.json --port 3001",
-    "ui": "live-server docs/index.html --port=8080 --open=docs/index.html",
+    "ui": "live-server docs --port=8080 --open=index.html",
     "dev": "concurrently \"npm run api\" \"npm run ui\""
   },
   "dependencies": {

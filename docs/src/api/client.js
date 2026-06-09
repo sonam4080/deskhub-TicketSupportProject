@@ -1,26 +1,29 @@
-const BASE_URL = 'http://localhost:3001';
+const BASE_URLS = ['http://localhost:3001', 'http://localhost:3002'];
 
 async function request(endpoint, options = {}) {
-    const url = `${BASE_URL}${endpoint}`;
     const headers = {
         'Content-Type': 'application/json',
         ...options.headers
     };
 
-    try {
-        const response = await fetch(url, { ...options, headers });
-        const totalCount = response.headers.get('X-Total-Count');
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    let lastError;
+    for (const baseUrl of BASE_URLS) {
+        const url = `${baseUrl}${endpoint}`;
+        try {
+            const response = await fetch(url, { ...options, headers });
+            const totalCount = response.headers.get('X-Total-Count');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            return { data, totalCount: parseInt(totalCount) || null };
+        } catch (error) {
+            lastError = error;
         }
-
-        const data = await response.json();
-        return { data, totalCount: parseInt(totalCount) || null };
-    } catch (error) {
-        console.error('API Request Error:', error);
-        throw error;
     }
+
+    console.error('API Request Error:', lastError);
+    throw lastError;
 }
 
 export const client = {

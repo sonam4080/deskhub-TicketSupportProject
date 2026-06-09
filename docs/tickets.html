@@ -9,23 +9,34 @@
 </head>
 
 <body>
-    <header>
-        <div class="logo"><strong>DeskHub</strong></div>
-        <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="tickets.html" class="active">Tickets</a>
+    <header class="app-header">
+        <div class="brand-group">
+            <div class="logo"><strong>DeskHub</strong></div>
+        </div>
+        <div class="user-section">
             <span id="user-name"></span>
-            <a href="#" id="logout-btn">Logout</a>
-        </nav>
+            <button class="btn btn-secondary" id="logout-btn">Logout</button>
+        </div>
     </header>
 
     <main class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <h1>Support Tickets</h1>
-            <button class="btn btn-primary" style="width: auto;" id="new-ticket-btn">+ New Ticket</button>
-        </div>
+        <section class="dashboard-section" style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <h1>Welcome back!</h1>
+                    <p style="color: var(--secondary-color);">Here’s what’s happening with your tickets today.</p>
+                </div>
+                <button class="btn btn-primary" style="width: auto;" id="new-ticket-btn">+ New Ticket</button>
+            </div>
+            <div class="stats-grid" id="dashboard-stats"></div>
+        </section>
 
-        <div class="filters-bar">
+        <section class="tickets-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Support Tickets</h2>
+            </div>
+
+            <div class="filters-bar">
             <input type="text" id="search-input" placeholder="Search tickets...">
             <select id="status-filter">
                 <option value="">All Statuses</option>
@@ -147,6 +158,127 @@
             </div>
         </div>
     </div>
+
+    <!-- Side Panel: Ticket Details (keeps user on same page) -->
+    <aside id="ticket-panel" class="side-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="ticket-panel-title" tabindex="-1">
+        <div class="side-panel-header">
+            <h2 id="ticket-panel-title">Ticket Details</h2>
+            <button id="close-ticket-panel" class="btn btn-close" aria-label="Close ticket panel">✕</button>
+        </div>
+        <div class="side-panel-content">
+            <div id="panel-loading" class="panel-loading" aria-live="polite">
+                <div class="spinner" aria-hidden="true"></div>
+                <div class="visually-hidden">Loading ticket...</div>
+            </div>
+            <div id="panel-body" class="panel-body" hidden>
+                <div class="panel-tabs">
+                    <button type="button" id="panel-tab-details" class="tab active">Details</button>
+                    <button type="button" id="panel-tab-edit" class="tab">Edit</button>
+                </div>
+
+                <div id="panel-view" class="panel-section">
+                    <div class="panel-summary">
+                        <div>
+                            <h3 id="panel-title"></h3>
+                            <p class="muted" id="panel-meta"></p>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div id="panel-description" class="panel-description"></div>
+                        <div class="panel-details-grid">
+                            <div><strong>Status:</strong> <span id="panel-status"></span></div>
+                            <div><strong>Priority:</strong> <span id="panel-priority"></span></div>
+                            <div><strong>Category:</strong> <span id="panel-category"></span></div>
+                            <div><strong>Customer:</strong> <span id="panel-customer"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-card-header">
+                            <h4>Comments</h4>
+                            <span id="panel-comment-count" class="comment-count"></span>
+                        </div>
+                        <div id="panel-comments" class="comments-list">No comments yet.</div>
+                        <form id="panel-add-comment-form" class="comment-form">
+                            <label for="panel-comment-input">Add a comment</label>
+                            <textarea id="panel-comment-input" class="form-control" rows="3" placeholder="Write your comment here..."></textarea>
+                            <button type="submit" class="btn btn-primary">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="panel-edit" class="panel-section" hidden>
+                    <div class="panel-card panel-edit-card">
+                        <div class="panel-card-header">
+                            <h4>Edit Ticket</h4>
+                            <button type="button" class="btn panel-cancel-edit-btn">Cancel</button>
+                        </div>
+                        <form id="panel-edit-form">
+                            <div class="form-group">
+                                <label for="panel-title-input">Title</label>
+                                <input type="text" id="panel-title-input" class="form-control">
+                                <div class="error-message" id="panel-title-error"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="panel-description-input">Description</label>
+                                <textarea id="panel-description-input" class="form-control" rows="4"></textarea>
+                                <div class="error-message" id="panel-description-error"></div>
+                            </div>
+                            <div class="form-grid-two">
+                                <div class="form-group">
+                                    <label for="panel-priority-input">Priority</label>
+                                    <select id="panel-priority-input" class="form-control">
+                                        <option value="">Select priority</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                    <div class="error-message" id="panel-priority-error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="panel-category-input">Category</label>
+                                    <select id="panel-category-input" class="form-control">
+                                        <option value="">Select category</option>
+                                        <option value="technical">Technical</option>
+                                        <option value="billing">Billing</option>
+                                        <option value="feature">Feature Request</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="error-message" id="panel-category-error"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="panel-status-input">Status</label>
+                                <select id="panel-status-input" class="form-control">
+                                    <option value="open">Open</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="resolved">Resolved</option>
+                                </select>
+                                <div class="error-message" id="panel-status-error"></div>
+                            </div>
+                            <div class="form-grid-two">
+                                <div class="form-group">
+                                    <label for="panel-customer-name-input">Customer Name</label>
+                                    <input type="text" id="panel-customer-name-input" class="form-control">
+                                    <div class="error-message" id="panel-customer-name-error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="panel-customer-email-input">Customer Email</label>
+                                    <input type="email" id="panel-customer-email-input" class="form-control">
+                                    <div class="error-message" id="panel-customer-email-error"></div>
+                                </div>
+                            </div>
+                            <div class="panel-actions">
+                                <button type="submit" class="btn btn-primary" id="panel-save-btn">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
 
     <script type="module" src="./src/main.js"></script>
 </body>

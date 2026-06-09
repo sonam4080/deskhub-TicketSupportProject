@@ -5,6 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DeskHub</title>
     <link rel="stylesheet" href="./styles/main.css">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+        .auth-card h1 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #2563eb;
+            font-size: 2rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 0.85rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.45rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 0.45rem;
+            background: #2563eb;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        .error-message {
+            display: none;
+            color: #ef4444;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">

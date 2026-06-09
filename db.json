@@ -109,12 +109,12 @@
       "category": "technical",
       "customerName": "D si",
       "customerEmail": "sut@gmail.com",
-      "status": "open",
+      "status": "resolved",
       "assigneeId": null,
       "createdAt": "2026-06-05T04:03:46.471Z",
       "id": 8,
       "priorityRank": 3,
-      "statusRank": 3
+      "statusRank": 1
     },
     {
       "title": "sort by status",
@@ -145,18 +145,32 @@
       "statusRank": 3
     },
     {
-      "title": "new test-after edit -2",
+      "title": "new test-after edit - 03",
       "description": "checking new implementation",
       "priority": "urgent",
       "category": "billing",
       "customerName": "sh Singh",
       "customerEmail": "dh@gmail.com",
-      "status": "open",
+      "status": "resolved",
       "assigneeId": null,
       "createdAt": "2026-06-05T18:02:53.073Z",
       "priorityRank": 4,
-      "statusRank": 3,
+      "statusRank": 1,
       "id": 14
+    },
+    {
+      "title": "New case created",
+      "description": "case created",
+      "priority": "urgent",
+      "category": "billing",
+      "customerName": "aroja",
+      "customerEmail": "aroja@gmail.com",
+      "status": "open",
+      "assigneeId": null,
+      "createdAt": "2026-06-09T02:17:50.546Z",
+      "priorityRank": 4,
+      "statusRank": 3,
+      "id": 15
     }
   ],
   "comments": [
@@ -236,6 +250,20 @@
       "text": "what is status\n",
       "createdAt": "2026-06-05T18:03:17.966Z",
       "id": 11
+    },
+    {
+      "ticketId": 14,
+      "userId": 1,
+      "body": "what is update on ticket ?",
+      "createdAt": "2026-06-07T05:57:17.041Z",
+      "id": 12
+    },
+    {
+      "ticketId": 14,
+      "userId": 1,
+      "body": "?",
+      "createdAt": "2026-06-07T06:22:16.446Z",
+      "id": 13
     }
   ]
 }

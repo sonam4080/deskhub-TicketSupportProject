@@ -18,7 +18,7 @@ export function initLogin() {
 
         try {
             await authApi.login(email, password);
-            window.location.href = 'dashboard.html';
+            window.location.href = 'tickets.html';
         } catch (error) {
             errorMsg.style.display = 'block';
             loginBtn.disabled = false;
@@ -38,6 +38,6 @@ export function checkAuth() {
     if (!isAuthenticated && !isPublic) {
         window.location.href = 'index.html';
     } else if (isAuthenticated && isPublic) {
-        window.location.href = 'dashboard.html';
+        window.location.href = 'tickets.html';
     }
 }

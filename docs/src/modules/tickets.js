@@ -6,6 +6,10 @@ import { validateForm } from './form.js';
 
 let currentPage = 1;
 const limit = 5;
+let lastFocusedElement = null;
+let panelKeydownHandler = null;
+let currentTicket = null;
+let refreshTickets = null;
 
 export async function initTicketsList() {
     const searchInput = document.getElementById('search-input');
@@ -46,10 +50,13 @@ export async function initTicketsList() {
             const { data, totalCount } = await ticketsApi.listTickets(params);
             renderTable(data);
             renderPagination(totalCount);
+            window.dispatchEvent(new Event('dashboardRefreshRequested'));
         } catch (error) {
             ui.showToast('Failed to load tickets');
         }
     };
+
+    refreshTickets = refresh;
 
     searchInput?.addEventListener('input', debounce(() => {
         currentPage = 1;
@@ -294,7 +301,7 @@ export async function initTicketsList() {
             
             // Find the ticket to get its title
             const row = e.target.closest('tr');
-            const ticketTitleElement = row.querySelector('a');
+            const ticketTitleElement = row.querySelector('.ticket-title');
             const ticketTitle = ticketTitleElement ? ticketTitleElement.textContent : 'this ticket';
             
             // Show delete confirmation modal
@@ -320,18 +327,383 @@ function renderTable(tickets) {
     tbody.innerHTML = tickets.map(t => `
         <tr>
             <td>#${t.id}</td>
-            <td><a href="ticket-detail.html?id=${t.id}&source=title">${t.title}</a></td>
-            <td>${t.customerName}</td>
-            <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
-            <td><span class="badge badge-${t.status.replace(' ', '-')}">${t.status}</span></td>
+            <td><span class="ticket-title">${escapeHtml(t.title)}</span></td>
+            <td>${escapeHtml(t.customerName)}</td>
+            <td><span class="badge badge-${t.priority}">${escapeHtml(t.priority)}</span></td>
+            <td><span class="badge badge-${t.status.replace(' ', '-')}">${escapeHtml(t.status)}</span></td>
             <td>${formatDate(t.createdAt)}</td>
             <td class="action-cell">
-                <button onclick="window.location.href='ticket-detail.html?id=${t.id}'" class="btn btn-sm">View</button>
+                <button class="btn btn-sm view-ticket" data-ticket-id="${t.id}">View</button>
                 <button class="btn btn-sm btn-danger delete-ticket" data-ticket-id="${t.id}" title="Delete ticket">&#128465;</button>
             </td>
         </tr>
     `).join('');
 }
+
+function renderPanelView(ticket) {
+    const panelTitle = document.getElementById('panel-title');
+    const panelMeta = document.getElementById('panel-meta');
+    const panelDescription = document.getElementById('panel-description');
+    const panelStatus = document.getElementById('panel-status');
+    const panelPriority = document.getElementById('panel-priority');
+    const panelCategory = document.getElementById('panel-category');
+    const panelCustomer = document.getElementById('panel-customer');
+
+    if (!panelTitle || !panelMeta || !panelDescription) return;
+
+    panelTitle.textContent = ticket.title || '';
+    panelMeta.textContent = `Ticket #${ticket.id} • ${formatDate(ticket.createdAt)}`;
+    panelDescription.innerHTML = ticket.description ? `<p>${escapeHtml(ticket.description).replace(/\n/g, '<br>')}</p>` : '<p>No description provided.</p>';
+    if (panelStatus) panelStatus.textContent = ticket.status || 'N/A';
+    if (panelPriority) panelPriority.textContent = ticket.priority || 'N/A';
+    if (panelCategory) panelCategory.textContent = ticket.category || 'N/A';
+    if (panelCustomer) panelCustomer.textContent = `${ticket.customerName || 'Unknown'} (${ticket.customerEmail || 'No email'})`;
+}
+
+function populatePanelEditForm(ticket) {
+    const titleInput = document.getElementById('panel-title-input');
+    const descriptionInput = document.getElementById('panel-description-input');
+    const priorityInput = document.getElementById('panel-priority-input');
+    const categoryInput = document.getElementById('panel-category-input');
+    const statusInput = document.getElementById('panel-status-input');
+    const customerNameInput = document.getElementById('panel-customer-name-input');
+    const customerEmailInput = document.getElementById('panel-customer-email-input');
+
+    if (!titleInput || !descriptionInput || !priorityInput || !categoryInput || !statusInput || !customerNameInput || !customerEmailInput) return;
+
+    titleInput.value = ticket.title || '';
+    descriptionInput.value = ticket.description || '';
+    priorityInput.value = ticket.priority || '';
+    categoryInput.value = ticket.category || '';
+    statusInput.value = ticket.status || 'open';
+    customerNameInput.value = ticket.customerName || '';
+    customerEmailInput.value = ticket.customerEmail || '';
+}
+
+function setPanelTab(activeTab) {
+    const detailsTab = document.getElementById('panel-tab-details');
+    const editTab = document.getElementById('panel-tab-edit');
+    const viewSection = document.getElementById('panel-view');
+    const editSection = document.getElementById('panel-edit');
+
+    if (detailsTab) detailsTab.classList.toggle('active', activeTab === 'details');
+    if (editTab) editTab.classList.toggle('active', activeTab === 'edit');
+    if (viewSection) viewSection.hidden = activeTab !== 'details';
+    if (editSection) editSection.hidden = activeTab !== 'edit';
+
+    clearPanelValidation();
+}
+
+function showPanelView() {
+    setPanelTab('details');
+}
+
+function showPanelEdit() {
+    setPanelTab('edit');
+}
+
+function clearPanelValidation() {
+    document.querySelectorAll('#panel-edit-form .error-message').forEach(el => {
+        el.textContent = '';
+        el.classList.remove('show');
+    });
+    document.querySelectorAll('#panel-edit-form .form-control').forEach(el => {
+        el.classList.remove('error');
+    });
+}
+
+async function loadPanelComments(ticketId) {
+    const panelComments = document.getElementById('panel-comments');
+    if (!panelComments) return;
+
+    try {
+        const response = await ticketsApi.listComments(ticketId);
+        const comments = response.data || [];
+        if (comments.length === 0) {
+            panelComments.innerHTML = '<div class="comment-item">No comments yet.</div>';
+            return;
+        }
+
+        panelComments.innerHTML = comments.map(c => `
+            <div class="comment-item">
+                <div class="comment-meta"><strong>${escapeHtml(c.user?.name || 'User')}</strong> • ${formatDate(c.createdAt)}</div>
+                <div class="comment-body">${escapeHtml(c.body || '')}</div>
+            </div>
+        `).join('');
+        const commentCount = document.getElementById('panel-comment-count');
+        if (commentCount) commentCount.textContent = `(${comments.length})`;
+    } catch (error) {
+        panelComments.innerHTML = '<div class="comment-item">No comments yet.</div>';
+        const commentCount = document.getElementById('panel-comment-count');
+        if (commentCount) commentCount.textContent = '(0)';
+    }
+}
+
+async function savePanelEdits() {
+    if (!currentTicket) return;
+
+    const form = document.getElementById('panel-edit-form');
+    if (!form) return;
+
+    clearPanelValidation();
+
+    const updates = {
+        title: document.getElementById('panel-title-input')?.value || '',
+        description: document.getElementById('panel-description-input')?.value || '',
+        priority: document.getElementById('panel-priority-input')?.value || '',
+        category: document.getElementById('panel-category-input')?.value || '',
+        status: document.getElementById('panel-status-input')?.value || 'open',
+        customerName: document.getElementById('panel-customer-name-input')?.value || '',
+        customerEmail: document.getElementById('panel-customer-email-input')?.value || ''
+    };
+
+    const validationSchema = {
+        title: [
+            { type: 'required', message: 'Title is required' },
+            { type: 'minLength', param: 5, message: 'Title must be at least 5 characters' },
+            { type: 'maxLength', param: 100, message: 'Title cannot exceed 100 characters' }
+        ],
+        description: [
+            { type: 'required', message: 'Description is required' },
+            { type: 'minLength', param: 10, message: 'Description must be at least 10 characters' }
+        ],
+        customerName: [
+            { type: 'required', message: 'Customer name is required' }
+        ],
+        customerEmail: [
+            { type: 'required', message: 'Customer email is required' },
+            { type: 'email', message: 'Please enter a valid email address' }
+        ],
+        priority: [
+            { type: 'required', message: 'Please select a priority' }
+        ],
+        category: [
+            { type: 'required', message: 'Please select a category' }
+        ]
+    };
+
+    const errors = validateForm(updates, validationSchema);
+    if (Object.keys(errors).length > 0) {
+        const mapping = {
+            title: { message: 'panel-title-error', input: 'panel-title-input' },
+            description: { message: 'panel-description-error', input: 'panel-description-input' },
+            customerName: { message: 'panel-customer-name-error', input: 'panel-customer-name-input' },
+            customerEmail: { message: 'panel-customer-email-error', input: 'panel-customer-email-input' },
+            priority: { message: 'panel-priority-error', input: 'panel-priority-input' },
+            category: { message: 'panel-category-error', input: 'panel-category-input' }
+        };
+
+        Object.entries(errors).forEach(([field, message]) => {
+            const map = mapping[field];
+            if (map) {
+                const errorEl = document.getElementById(map.message);
+                if (errorEl) {
+                    errorEl.textContent = message;
+                    errorEl.classList.add('show');
+                }
+                const inputEl = document.getElementById(map.input);
+                if (inputEl) inputEl.classList.add('error');
+            }
+        });
+        ui.showToast('Please fix the errors before saving');
+        return;
+    }
+
+    try {
+        await ticketsApi.updateTicket(currentTicket.id, updates);
+        currentTicket = { ...currentTicket, ...updates };
+        renderPanelView(currentTicket);
+        populatePanelEditForm(currentTicket);
+        showPanelView();
+        ui.showToast('Ticket updated successfully!');
+        refreshTickets?.();
+    } catch (error) {
+        ui.showToast('Failed to update ticket');
+    }
+}
+
+// Side-panel functions: open/close and hash handling
+function openTicketPanel(id) {
+    const panel = document.getElementById('ticket-panel');
+    const panelBody = document.getElementById('panel-body');
+    const panelLoading = document.getElementById('panel-loading');
+
+    if (!panel) return;
+    // Save focused element to restore focus on close
+    lastFocusedElement = document.activeElement;
+    // Hide main content from assistive tech
+    document.querySelectorAll('main, header').forEach(el => el?.setAttribute('aria-hidden', 'true'));
+    // Lock body scroll
+    document.body.style.overflow = 'hidden';
+
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    panelLoading.style.display = 'block';
+    panelBody.hidden = true;
+    panel.focus();
+
+    // Key handling for Escape and Tab focus-trap
+    panelKeydownHandler = function(e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            closeTicketPanel();
+            return;
+        }
+        if (e.key === 'Tab') {
+            const focusable = panel.querySelectorAll('a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (!focusable || focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        }
+    };
+    document.addEventListener('keydown', panelKeydownHandler);
+
+    // Update hash for deep-linking
+    try { window.location.hash = `#/tickets/${id}`; } catch (e) {}
+
+    ticketsApi.getTicket(id).then(async res => {
+        currentTicket = res.data || res;
+        renderPanelView(currentTicket);
+        populatePanelEditForm(currentTicket);
+        showPanelView();
+        await loadPanelComments(currentTicket.id);
+    }).catch(() => {
+        const panelLoadingText = document.getElementById('panel-loading');
+        if (panelLoadingText) panelLoadingText.textContent = 'Failed to load ticket';
+    }).finally(() => {
+        panelLoading.style.display = 'none';
+        panelBody.hidden = false;
+    });
+}
+
+// helper to escape HTML to avoid injection
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function closeTicketPanel() {
+    const panel = document.getElementById('ticket-panel');
+    if (!panel) return;
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    // Unlock body scroll
+    document.body.style.overflow = '';
+    // restore main content to assistive tech
+    document.querySelectorAll('main, header').forEach(el => el?.removeAttribute('aria-hidden'));
+    // remove keydown listener
+    if (panelKeydownHandler) {
+        document.removeEventListener('keydown', panelKeydownHandler);
+        panelKeydownHandler = null;
+    }
+    // restore focus
+    try {
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
+    } catch (e) {}
+    lastFocusedElement = null;
+    // remove hash if it's a ticket hash
+    if (window.location.hash.startsWith('#/tickets/')) {
+        history.pushState('', document.title, window.location.pathname + window.location.search);
+    }
+}
+
+// Listen for clicks on ticket links or view buttons
+document.addEventListener('click', (e) => {
+    const viewBtn = e.target.closest('.view-ticket');
+    if (viewBtn) {
+        const id = viewBtn.dataset.ticketId;
+        if (id) openTicketPanel(id);
+        return;
+    }
+    const tabDetails = e.target.closest('#panel-tab-details');
+    if (tabDetails) {
+        showPanelView();
+        return;
+    }
+
+    const tabEdit = e.target.closest('#panel-tab-edit');
+    if (tabEdit) {
+        showPanelEdit();
+        return;
+    }
+
+    const panelCancelEditBtn = e.target.closest('.panel-cancel-edit-btn');
+    if (panelCancelEditBtn) {
+        showPanelView();
+        return;
+    }
+
+    const closeBtn = e.target.closest('#close-ticket-panel');
+    if (closeBtn) {
+        closeTicketPanel();
+        return;
+    }
+});
+
+document.addEventListener('submit', async (e) => {
+    if (e.target.matches('#panel-add-comment-form')) {
+        e.preventDefault();
+        const textarea = document.getElementById('panel-comment-input');
+        const commentText = textarea?.value.trim() || '';
+        if (!commentText || !currentTicket) {
+            ui.showToast('Please enter a comment');
+            return;
+        }
+
+        try {
+            await ticketsApi.addComment({
+                ticketId: currentTicket.id,
+                userId: 1,
+                body: commentText
+            });
+            if (textarea) textarea.value = '';
+            await loadPanelComments(currentTicket.id);
+            window.dispatchEvent(new Event('dashboardRefreshRequested'));
+            ui.showToast('Comment posted');
+        } catch (error) {
+            ui.showToast('Failed to post comment');
+        }
+        return;
+    }
+
+    if (e.target.matches('#panel-edit-form')) {
+        e.preventDefault();
+        await savePanelEdits();
+        return;
+    }
+});
+
+// Handle direct hash navigation to open panel on load or back/forward
+window.addEventListener('hashchange', () => {
+    const m = window.location.hash.match(/^#\/tickets\/(\d+)/);
+    if (m && m[1]) {
+        openTicketPanel(m[1]);
+    } else {
+        closeTicketPanel();
+    }
+});
+
+// On initial load, if there's a ticket hash, open it
+window.addEventListener('load', () => {
+    const m = window.location.hash.match(/^#\/tickets\/(\d+)/);
+    if (m && m[1]) openTicketPanel(m[1]);
+});
 
 function renderPagination(totalCount) {
     const container = document.getElementById('pagination');
